@@ -154,7 +154,7 @@ app.get("/", (req, res, next) => {
           authorization: "Bearer (JWT token)",
         },
         result: {
-          products: "Array",
+          cart: "Array",
         },
       },
       delete_cart_item:{
@@ -176,7 +176,7 @@ app.get("/", (req, res, next) => {
           img: "String *optional* (Must be hosted image. I can suggest to host on product Image)",
         },
         result: {
-          product: "Object",
+          cart: "Object",
         },
       }
     }
