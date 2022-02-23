@@ -146,6 +146,40 @@ app.get("/", (req, res, next) => {
         },
       },
     },
+    cart_routes:{
+      all_cart_items: {
+        method: "GET",
+        route: "/users/:id/cart",
+        headers: {
+          authorization: "Bearer (JWT token)",
+        },
+        result: {
+          products: "Array",
+        },
+      },
+      delete_cart_item:{
+        method: "DELETE",
+        route: "/users/:id/cart",
+        result: {
+          message: "Object",
+        },
+      },
+      update_cart:{
+        method: "PUT",
+        route: "/users/:id/cart",
+        headers: {
+          authorization: "Bearer (JWT token)",
+        },
+        request_body: {
+          title: "String *optional*",
+          body: "String *optional*",
+          img: "String *optional* (Must be hosted image. I can suggest to host on product Image)",
+        },
+        result: {
+          product: "Object",
+        },
+      }
+    }
   });
 });
 app.use("/users", userRouter);
@@ -155,6 +189,7 @@ app.listen(app.get("port"), (server) => {
   console.info(`Server listen on port ${app.get("port")}`);
   console.info("Press CTRL + C to close the server");
 });
+
 // Status code reminders
 
 // 200s => All good
