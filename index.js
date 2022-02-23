@@ -1,8 +1,3 @@
-// Status code reminders
-
-// 200s => All good
-// 400s => User input errors
-// 500s => Server errors
 
 require("dotenv").config();
 
@@ -13,22 +8,22 @@ const cors = require("cors");
 const postRouter = require("./routes/productRouter");
 const userRouter = require("./routes/userRouter");
 
-// Setting up MongoDB connection
+// DB connection
 mongoose.connect(process.env.DB_URL, { useNewUrlParser: true });
 const db = mongoose.connection;
 db.on("error", (error) => console.log(error));
 db.once("open", () => console.log("Connected to database"));
 
-// Configure the Express app
+// express
 const app = express();
 app.set("port", process.env.PORT || 3000);
 app.use(express.json());
 app.use(cors());
 
-// API routes
+
 app.get("/", (req, res, next) => {
   res.send({
-    message: "Welcome to the Generic Blog API",
+    message: "Welcome to my nike api API",
     user_routes: {
       user_register: {
         method: "POST",
@@ -159,3 +154,8 @@ app.listen(app.get("port"), (server) => {
   console.info(`Server listen on port ${app.get("port")}`);
   console.info("Press CTRL + C to close the server");
 });
+// Status code reminders
+
+// 200s => All good
+// 400s => User input errors
+// 500s => Server errors
