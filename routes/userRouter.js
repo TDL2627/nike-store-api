@@ -71,7 +71,7 @@ router.post("/", async (req, res, next) => {
         JSON.stringify(newUser),
         process.env.JWT_SECRET_KEY
       );
-      res.status(201).json({ jwt: access_token });
+      res.status(201).json({ jwt: access_token, name: name });
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
