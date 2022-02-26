@@ -6,7 +6,7 @@ const Cart = require("../models/cart");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { getUser } = require("../middleware/finders");
-const { getCart } = require("../middleware/finders");
+const { getProduct } = require("../middleware/finders");
 
 
 const router = express.Router();
@@ -40,7 +40,7 @@ router.patch("/", async (req, res, next) => {
       );
       res.status(201).json({ jwt: access_token });
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      res.status(500).json({ message: error.message }); v
     }
   } else {
     res
@@ -112,83 +112,133 @@ router.delete("/:id", getUser, async (req, res, next) => {
 });
 
 
-// cart stuff
+// cart stuff attempt 1
 
-// GET cart items
-router.get("/:id/cart",getCart, auth, async (req, res) => {
+// // GET cart items
+// router.get("/:id/cart",getCart, auth, async (req, res) => {
+//   try {
+//     const cart = await Cart.find();
+//     res.status(201).send(cart);
+//   } catch (error) {
+//     res.status(500).send({ message: error.message });
+//   }
+// });
+
+// // add to cart
+// router.post("/:id/cart", auth, async (req, res, next) => {
+//   const { name, price, category, img } = req.body;
+
+//   let cart;
+
+//   img
+//     ? (cart = new Cart({
+//         name,
+//         price,
+//         category,
+//         author: req.user._id,
+//         img,
+//       }))
+//     : (product = new Cart({
+//       name,
+//       price,
+//       category,
+//         author: req.user._id,
+//       }));
+
+//   try {
+//     const newCart = await cart.save();
+//     res.status(201).json(newCart);
+//   } catch (error) {
+//     res.status(400).json({ message: error.message });
+//   }
+// });
+
+
+// // delete item from cart
+// router.delete("/:id/cart", [auth, getCart], async (req, res, next) => {
+//   if (req.user._id !== res.cart.author)
+//     res
+//       .status(400)
+//       .json({ message: "You do not have the permission to delete this cart item" });
+//   try {
+//     await res.cart.remove();
+//     res.json({ message: "Removed cart item" });
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// });
+
+// // updated item from cart
+
+// router.put("/:id/cart", [auth, getCart], async (req, res, next) => {
+//   if (req.user._id !== res.cart.author)
+//     res
+//       .status(400)
+//       .json({ message: "You do not have the permission to update this cart" });
+//   const { name, price, category, img } = req.body;
+//   if (name) res.cart.name = name;
+//   if (price) res.cart.price = price;
+//   if (category) res.cart.category = category;
+//   if (img) res.cart.img = img;
+
+//   try {
+//     const updatedCart = await res.cart.save();
+//     res.status(201).send(updatedCart);
+//   } catch (error) {
+//     res.status(400).json({ message: error.message });
+//   }
+// });
+
+
+// cart attempt 2
+//getting all items in cart
+router.get("/:id/cart", auth, async (req, res, next) => {
   try {
-    const cart = await Cart.find();
-    res.status(201).send(cart);
+    res.json(req.user.cart);
   } catch (error) {
-    res.status(500).send({ message: error.message });
+    res.status(500).json({ msg: error });
   }
 });
 
-// add to cart
-router.post("/:id/cart", auth, async (req, res, next) => {
-  const { name, price, category, img } = req.body;
-
-  let cart;
-
-  img
-    ? (cart = new Cart({
-        name,
-        price,
+//updates the items in the users cart
+router.put("/:id/cart", [auth, getProduct], async (req, res, next) => {
+  const user = await User.findById(req.user._id);
+  const inCart = user.cart.some((prod) => prod._id == req.params.id);
+  if (inCart) {
+    product.quantity += req.body.quantity;
+    const updatedUser = await user.save();
+    try {
+      res.status(201).json(updatedUser.cart);
+    } catch (error) {
+      res.status(500).json(console.log(error));
+    }
+  } else {
+    try {
+      // console.log(Array.isArray(user.cart))
+      // user.cart = []
+      let product_id = res.product._id;
+      let title = res.product.title;
+      let category = res.product.category;
+      let img = res.product.img;
+      let price = res.product.price;
+      let quantity = req.body;
+      let created_by = req.user._id;
+      user.cart.push({
+        product_id,
+        title,
         category,
-        author: req.user._id,
         img,
-      }))
-    : (product = new Cart({
-      name,
-      price,
-      category,
-        author: req.user._id,
-      }));
-
-  try {
-    const newCart = await cart.save();
-    res.status(201).json(newCart);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
+        price,
+        quantity,
+        created_by,
+      });
+      const updatedUser = await user.save();
+      res.status(201).json(updatedUser.cart);
+    } catch (error) {
+      res.status(500).json(console.log(error));
+    }
   }
 });
-
-
-// delete item from cart
-router.delete("/:id/cart", [auth, getCart], async (req, res, next) => {
-  if (req.user._id !== res.cart.author)
-    res
-      .status(400)
-      .json({ message: "You do not have the permission to delete this cart item" });
-  try {
-    await res.cart.remove();
-    res.json({ message: "Removed cart item" });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
-
-// updated item from cart
-
-router.put("/:id/cart", [auth, getCart], async (req, res, next) => {
-  if (req.user._id !== res.cart.author)
-    res
-      .status(400)
-      .json({ message: "You do not have the permission to update this cart" });
-  const { name, price, category, img } = req.body;
-  if (name) res.cart.name = name;
-  if (price) res.cart.price = price;
-  if (category) res.cart.category = category;
-  if (img) res.cart.img = img;
-
-  try {
-    const updatedCart = await res.cart.save();
-    res.status(201).send(updatedCart);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-});
-
 
 
 module.exports = router;
