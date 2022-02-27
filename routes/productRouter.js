@@ -19,7 +19,7 @@ router.get("/", auth, async (req, res) => {
 
 // GET one product
 router.get("/:id", [auth, getProduct], (req, res, next) => {
-  res.send(res.post);
+  res.send(res.product);
 });
 
 // CREATE a product
