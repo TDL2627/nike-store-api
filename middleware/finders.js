@@ -1,7 +1,7 @@
 // This is used to find various Schemas
 const User = require("../models/user");
 const Product = require("../models/product");
-const Cart = require("../models/cart");
+
 
 
 async function getUser(req, res, next) {
@@ -29,16 +29,6 @@ async function getProduct(req, res, next) {
   next();
 }
 
-async function getCart(req, res, next) {
-  let cart;
-  try {
-    cart = await Cart.findById(req.params.id);
-    if (!cart) res.status(404).json({ message: "Could not find item" });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-  res.cart = cart;
-  next();
-}
 
-module.exports = { getUser, getProduct, getCart };
+
+module.exports = { getUser, getProduct };
