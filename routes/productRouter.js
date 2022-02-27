@@ -71,7 +71,7 @@ router.put("/:id", [auth, getProduct], async (req, res, next) => {
   }
 });
 
-// DELETE a product
+// DELETing a product 
 router.delete("/:id", [auth, getProduct], async (req, res, next) => {
   if (req.user._id !== res.product.author)
     res
