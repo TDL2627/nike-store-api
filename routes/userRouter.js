@@ -140,7 +140,7 @@ router.put("/:id/cart", [auth, getProduct], async (req, res, next) => {
       // console.log(Array.isArray(user.cart))
       // user.cart = []
       let product_id = res.product._id;
-      let title = res.product.title;
+      let name = res.product.name;
       let category = res.product.category;
       let img = res.product.img;
       let price = res.product.price;
@@ -148,7 +148,7 @@ router.put("/:id/cart", [auth, getProduct], async (req, res, next) => {
       let created_by = req.user._id;
       user.cart.push({
         product_id,
-        title,
+        name,
         category,
         img,
         price,
