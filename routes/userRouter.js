@@ -48,8 +48,6 @@ router.patch("/", async (req, res, next) => {
       .json({ message: "Email and password combination do not match" });
   }
 });
-
-
 // REGISTER a user
 router.post("/", async (req, res, next) => {
   const { name, email, contact, password, about } = req.body;
