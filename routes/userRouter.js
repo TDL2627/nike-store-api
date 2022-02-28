@@ -49,6 +49,7 @@ router.patch("/", async (req, res, next) => {
   }
 });
 
+
 // REGISTER a user
 router.post("/", async (req, res, next) => {
   const { name, email, contact, password, about } = req.body;
