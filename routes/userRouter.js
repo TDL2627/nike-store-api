@@ -50,7 +50,7 @@ router.patch("/", async (req, res, next) => {
 });
 // REGISTER a user
 router.post("/", async (req, res, next) => {
-  const { name, email, contact, password, about, img } = req.body;
+  const { name, email, contact, password, about, avatar } = req.body;
 
   const salt = await bcrypt.genSalt();
   const hashedPassword = await bcrypt.hash(password, salt);
@@ -60,7 +60,7 @@ router.post("/", async (req, res, next) => {
     email,
     contact,
     about,
-    img,
+    avatar,
     password: hashedPassword,
   });
 
